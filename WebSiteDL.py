@@ -11,22 +11,26 @@ class WebSiteDL(object):
     def __init__(self):
         self.content = ""
         self.down_path = ""
+        self.headers={'User-Agent':'Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.157 Safari/537.36'}#构造头部
+        self.cook={"Cookie":'ll="118205"; _ga=GA1.2.740277333.1448884744; _gat=1; bid="iu5QJoQtotc"; ps=y; '}
+
     def download_web(self,url):
         result = urlparse.urlparse(url,False)
         self.down_path = self.generate_path(result[1],result[2])
-        response = requests.get(url)
+        response = requests.get(url,cookies=self.cook,headers=self.headers)
         self.content = response.text
 
     def download_img(self,imgs = []):
         for i in xrange(0,len(imgs)):
             img = imgs[i]
-            response = requests.get(img)
-            result = urlparse.urlparse(img,False)
-            print "第%d张图片下载完成"%i
-            path = result[2]
-            name = path.split("/")[-1]
-            with open(self.down_path+os.sep+name,"wb") as f:
-                f.write(response.content)
+            if img.endswith("jpg") or img.endswith("png") or img.endswith("gif"):
+                response = requests.get(img,cookies=self.cook,headers=self.headers)
+                result = urlparse.urlparse(img,False)
+                print "第%d张图片下载完成"%i
+                path = result[2]
+                name = path.split("/")[-1]
+                with open(self.down_path+os.sep+name,"wb") as f:
+                    f.write(response.content)
 
     def generate_path(self,domain,path):
         if os.path.exists(WebConstant.download_path):
