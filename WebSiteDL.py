@@ -25,7 +25,7 @@ class WebSiteDL(object):
             print "第%d张图片下载完成"%i
             path = result[2]
             name = path.split("/")[-1]
-            with open(self.down_path+"/"+name,"wb") as f:
+            with open(self.down_path+os.sep+name,"wb") as f:
                 f.write(response.content)
 
     def generate_path(self,domain,path):
